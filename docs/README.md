@@ -7,8 +7,8 @@
 ## CLAM with Annotation 
 
 ### Pre-requisites:
-* Linux (Tested on Ubuntu 18.04)
-* NVIDIA GPU (Tested on Nvidia GeForce RTX 2080 Ti x 12 on local workstations, and Nvidia P100, K80 GPUs on Google Cloud)
+* Linux (Tested on Ubuntu 20.04)
+* NVIDIA GPU (Tested on Nvidia A100)
 * Python (3.7.5), h5py (2.10.0), matplotlib (3.1.1), numpy (1.17.3), opencv-python (4.1.1.26), openslide-python (1.1.1), openslide (3.4.1), pandas (0.25.3), pillow (6.2.1), PyTorch (1.3.1), scikit-learn (0.22.1), scipy (1.3.1), tensorflow (1.14.0), tensorboardx (1.9), torchvision (0.4.2), smooth-topk.
 
 Please refer to our [Installation guide](INSTALLATION.md) for detailed instructions on how to get started.
@@ -19,14 +19,6 @@ Please refer to our [Installation guide](INSTALLATION.md) for detailed instructi
    Avoid multipolygon
 3. Make folder "ANN_PATH" and out annotation data(.geojson) to the folder
 
-
-
-CLAM <img src="clam-logo.png" width="280px" align="right" />
-===========
-Data Efficient and Weakly Supervised Computational Pathology on Whole Slide Images.
-*Nature Biomedical Engineering*
-
-[ArXiv](https://arxiv.org/abs/2004.09666) | [Journal Link](https://www.nature.com/articles/s41551-020-00682-w) | [Interactive Demo](http://clam.mahmoodlab.org) | [Cite](#reference) 
 
 ***TL;DR:** CLAM is a high-throughput and interpretable method for data efficient whole slide image (WSI) classification using slide-level labels without any ROI extraction or patch-level annotations, and is capable of handling multi-class subtyping problems. Tested on three different WSI datasets, trained models adapt to independent test cohorts of WSI resections and biopsies as well as smartphone microscopy images (photomicrographs).*
 
