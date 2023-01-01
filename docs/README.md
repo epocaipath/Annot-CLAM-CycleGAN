@@ -1,3 +1,8 @@
+**Our Code is modified the code from the following Git hub**
+*CLAM architecture https://github.com/mahmoodlab/CLAM*
+*CycleGAN architecture https://github.com/ayukat1016/gan_sample/tree/main/chapter5*
+
+
 CLAM <img src="clam-logo.png" width="280px" align="right" />
 ===========
 Data Efficient and Weakly Supervised Computational Pathology on Whole Slide Images.
