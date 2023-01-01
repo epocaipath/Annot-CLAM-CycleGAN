@@ -1,8 +1,17 @@
-**Our Code is modified the code from the following Git hub**
+**Our Code is modified from the following Git hub**
 
 *CLAM architecture https://github.com/mahmoodlab/CLAM*
 
 *CycleGAN architecture https://github.com/ayukat1016/gan_sample/tree/main/chapter5*
+
+## CLAM with Annotation 
+#Prepare
+1. Make annotation using QuPath [QuPath](https://qupath.github.io/)
+2. Export Object Data as geojson (Pretty JSON)
+   Avoid multipolygon
+3. Make folder "ANN_PATH" and out annotation data(.geojson) to the folder
+
+
 
 CLAM <img src="clam-logo.png" width="280px" align="right" />
 ===========
