@@ -13,29 +13,34 @@
 
 
 ### Prepare
-1. Make annotation using QuPath [QuPath](https://qupath.github.io/)
-2. Export Object Data as geojson (Pretty JSON)
- 
+1. Make annotation using QuPath [QuPath](https://qupath.github.io/)  
+2. Export Object Data as geojson (Pretty JSON)  
    Note: Check the feature geometry type is exported as Polygon (Our code does not support the Mutlipolygon)
-3. Make folder "ANN_PATH" and add annotation data(.geojson) to the folder
+3. Make folder "ANN_PATH" and add annotation data(.geojson) to the folder  
+   Note: The file name of the annotation data should be the same as the WSI file.  
+         (ex. slide_1.ndpi & slide_1.geojson)
 
 
 ### WSI Segmentation and Patching 
 
-<img src="CLAM1.jpg" width="1000px" align="center" />
-The first step focuses on segmenting the tissue and excluding any holes. The segmentation of specific slides can be adjusted by tuning the individual parameters (e.g. dilated vessels appearing as holes may be important for certain sarcomas.) 
-The following example assumes that digitized whole slide image data in well known standard formats (.svs, .ndpi, .tiff etc.) are stored under a folder named DATA_DIRECTORY
+<img src="Segmentation1.png" width="500px" align="center" />
+The first step focuses on segmenting the tissue.  
+The segmentation of the annotated area on the slides. 
+Place the digitized whole slide image data (formated .ndpi, .svs etc.) under a folder named DATA_DIRECTORY
 
 ```bash
 DATA_DIRECTORY/
-	├── slide_1.svs
-	├── slide_2.svs
-	└── ...
+	├── slide_1.ndpi
+	├── slide_2.ndpi
+	:	:
+	└── slide_X.ndpi
 ```
 
-### Basic, Fully Automated Run
+### Fully Automated Run
 ``` shell
-python create_patches_fp.py --source DATA_DIRECTORY --save_dir RESULTS_DIRECTORY --patch_size 256 --seg --patch --stitch 
+python create_patches_fp.py --source DATA_DIRECTORY --save_dir RESULTS_DIRECTORY --patch_size 256 --step_size 256 --seg --patch --stitch  --ann_path  ANN_DIR
+![image](https://user-images.githubusercontent.com/88479698/211474954-d6356ceb-3423-4fac-bb8a-7f6a6af8d937.png)
+
 ```
 
 The above command will segment every slide in DATA_DIRECTORY using default parameters, extract all patches within the segemnted tissue regions, create a stitched reconstruction for each slide using its extracted patches (optional) and generate the following folder structure at the specified RESULTS_DIRECTORY:
