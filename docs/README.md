@@ -16,7 +16,7 @@
 1. Make annotation using QuPath [QuPath](https://qupath.github.io/)
 2. Export Object Data as geojson (Pretty JSON)
    Avoid multipolygon
-3. Make folder "ANN_PATH" and out annotation data(.geojson) to the folder
+3. Make folder "ANN_PATH" and add annotation data(.geojson) to the folder
 
 
 
