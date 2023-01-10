@@ -206,8 +206,6 @@ For reproducability, these models can be evaluated on data prepared by following
 
 Please refer to our pre-print and [interactive demo](http://clam.mahmoodlab.org) for detailed results on three different problems and adaptability across data sources, imaging devices and tissue content. 
 
-<img src="fig-git-hm.jpg" width="1000px" align="center" />  
-
 Visulize additional examples here: http://clam.mahmoodlab.org
 
 ## Issues
