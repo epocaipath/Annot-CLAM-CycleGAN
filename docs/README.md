@@ -78,7 +78,7 @@ We use annotation information instead of MASK information.
 
 Move "process_list_autogen.csv" (Created above under the RESULT_DIRECTORY) to main directory (current directory)
 
-####RUN
+#### RUN
 ```bash
 CUDA_VISIBLE_DEVICES=0,1 python extract_features_fp.py --data_h5_dir DIR_TO_COORDS --data_slide_dir DATA_DIRECTORY --csv_path CSV_FILE_NAME --feat_dir FEATURES_DIRECTORY --batch_size 512 --slide_ext .ndpi
 ```
@@ -107,7 +107,7 @@ FEATURES_DIRECTORY/
 The data used for training and testing are expected to be organized as follows:
 ```bash
 DATA_ROOT_DIR/
-    ├──feature_extracted/
+    ├──tumor_vs_normal_resnet_features/
         ├── h5_files
                 ├── slide_1.h5
                 ├── slide_2.h5
@@ -127,110 +127,43 @@ DATA_ROOT_DIR/
 python create_splits_seq.py --task task_1_tumor_vs_normal --seed 1 --label_frac 1.0 --k 10 　
 ```
 
-
-
-
-
-
-
-
-For training, look under main.py:
-```python 
-if args.task == 'task_1_tumor_vs_normal':
-    args.n_classes=2
-    dataset = Generic_MIL_Dataset(csv_path = 'dataset_csv/tumor_vs_normal_dummy_clean.csv',
-                            data_dir= os.path.join(args.data_root_dir, 'tumor_vs_normal_feat_resnet'),
-                            shuffle = False, 
-                            seed = args.seed, 
-                            print_info = True,
-                            label_dict = {'normal_tissue':0, 'tumor_tissue':1},
-                            label_col = 'label',
-                            ignore=[])
-```
-The user would need to pass:
-* csv_path: the path to the dataset csv file
-* data_dir: the path to saved .pt features
-* label_dict: a dictionary that maps labels in the label column to numerical values
-* label_col: name of the label column (optional, by default it's 'label')
-* ignore: labels to ignore (optional, by default it's an empty list)
-
-Finally, the user should add this specific 'task' specified by this dataset object in the --task arguments as shown below:
-
-```python
-parser.add_argument('--task', type=str, choices=['task_1_tumor_vs_normal',  'task_2_tumor_subtyping'])
-```
-
-
-The script uses the **Generic_WSI_Classification_Dataset** Class for which the constructor expects the same arguments as 
-**Generic_MIL_Dataset** (without the data_dir argument). For details, please refer to the dataset definition in **datasets/dataset_generic.py**
-
-### GPU Training Example for Binary Positive vs. Negative Classification (e.g. Lymph Node Status)
+### Training
+For trining using training data      
+#### Run the command below
 ``` shell
 CUDA_VISIBLE_DEVICES=0 python main.py --drop_out --early_stopping --lr 2e-4 --k 10 --label_frac 0.5 --exp_code task_1_tumor_vs_normal_CLAM_50 --weighted_sample --bag_loss ce --inst_loss svm --task task_1_tumor_vs_normal --model_type clam_sb --log_data --data_root_dir DATA_ROOT_DIR
 ```
 
-### Testing and Evaluation Script
-User also has the option of using the evluation script to test the performances of trained models. Examples corresponding to the models trained above are provided below:
+### Test
+For test the data using test data 
+#### Run the command below
 ``` shell
-CUDA_VISIBLE_DEVICES=0 python eval.py --drop_out --k 10 --models_exp_code task_1_tumor_vs_normal_CLAM_50_s1 --save_exp_code task_1_tumor_vs_normal_CLAM_50_s1_cv --task task_1_tumor_vs_normal --model_type clam_sb --results_dir results --data_root_dir DATA_ROOT_DIR
+CUDA_VISIBLE_DEVICES=0 python eval.py --drop_out --k 10 --models_exp_code task_1_tumor_vs_normal_CLAM_100_s1 --save_exp_code task_1_tumor_vs_normal_CLAM_100_s1_cv --task task_1_tumor_vs_normal --model_type clam_sb --results_dir results --data_root_dir DATA_ROOT_DIR
 ```
 
-``` shell
-CUDA_VISIBLE_DEVICES=0 python eval.py --drop_out --k 10 --models_exp_code task_2_tumor_subtyping_CLAM_50_s1 --save_exp_code task_2_tumor_subtyping_CLAM_50_s1_cv --task task_2_tumor_subtyping --model_type clam_sb --results_dir results --data_root_dir DATA_ROOT_DIR
-```
+### Heatmap Visualization  
+1. Create a tumor_vs_normal_dummy.csv file with case IDs for heatmap generation.   
+   Place the file at heatmaps/process_lists
+2. Save WSIs (.ndpi, .svs etc) at heatmaps/demo/slides    
+3. Save chekpoint file (___checkpoint.pt) at heatmaps/demo/ckpts   
+   Checkpoint files are created at results folder after training   
+4. Change the config_template.yaml (@ heatmaps/configs) : Specify the checkpoint file name
+5. Change the h5 and pt file path at create_heatmaps.py line 283 and 284    
+   the path is H5 and PT files folder "DATA_ROOT_DIR/tumor_vs_normal_resnet_features/"
 
-
-Once again, for information on each commandline argument, see:
-``` shell
-python eval.py -h
-```
-
-By adding your own custom datasets into **eval.py** the same way as you do for **main.py**, you can also easily test trained models on independent test sets. 
-
-### Heatmap Visualization
-Heatmap visualization can be computed in bulk via **create_heatmaps.py** by filling out the config file and storing it in **/heatmaps/configs** and then running **create_heatmaps.py** with the --config NAME_OF_CONFIG_FILE flag. A demo template is included (**config_template.yaml**) for lung subtyping on two WSIs from the CPTAC. 
-To run the demo (raw results are saved in **heatmaps/heatmap_raw_results** and final results are saved in **heatmaps/heatmap_production_results**):
+#### Run the command below
 ``` shell
 CUDA_VISIBLE_DEVICES=0,1 python create_heatmaps.py --config config_template.yaml
 ```
-See **/heatmaps/configs/config_template.yaml** for explanations for each configurable option.
+The result is created under heatmaps directory
 
+The heat map using annotated area is created under heatmap_row result
 
-### Trained Model Checkpoints
-For reproducability, all trained models used can be accessed [here](https://drive.google.com/drive/folders/1NZ82z0U_cexP6zkx1mRk-QeJyKWk4Q7z?usp=sharing).
-The 3 main folders (**tcga_kidney_cv**, **tcga_cptac_lung_cv** and **camelyon_40x_cv**) correspond to models for RCC subtyping trained on the TCGA, for NSCLC subtyping trained on TCGA and CPTAC and for Lymph Node Metastasis (Breast) detection trained on Camelyon16+17 respectively. In each main folder, each subfolder corresponds to one set of 10-fold cross-validation experiments. For example, the subfolder tcga_kidney_cv_CLAM_50_s1 contains the 10 checkpoints corresponding to the 10 cross-validation folds for TCGA RCC subtyping, trained using CLAM with multi-attention branches using 50% of cases in the full training set. 
-
-For reproducability, these models can be evaluated on data prepared by following the same pipeline described in the sections above by calling **eval.py** with the appropriate arguments that specify the model options (--dropout should be enabled and either --model_type clam_mb or --model_type mil should be set, for evaluation only, --subtyping flag does not make a difference) as well as where the model checkpoints (--results_dir and --models_exp_code) and data (--data_root_dir and --task) are stored.
-
-### Examples
-
-Please refer to our pre-print and [interactive demo](http://clam.mahmoodlab.org) for detailed results on three different problems and adaptability across data sources, imaging devices and tissue content. 
-
-Visulize additional examples here: http://clam.mahmoodlab.org
-
-## Issues
-- Please report all issues on the public forum.
 
 ## License
-© [Mahmood Lab](http://www.mahmoodlab.org) - This code is made available under the GPLv3 License and is available for non-commercial academic purposes.
-
-## Funding
-This work was funded by NIH NIGMS [R35GM138216](https://reporter.nih.gov/search/sWDcU5IfAUCabqoThQ26GQ/project-details/10029418).
+This code is made available under the GPLv3 License and is available for non-commercial academic purposes.
 
 ## Reference
-If you find our work useful in your research or if you use parts of this code please consider citing our [paper](https://www.nature.com/articles/s41551-020-00682-w):
-
+This Github is forked from  * https://github.com/mahmoodlab/CLAM*
+We referenced below
 Lu, M.Y., Williamson, D.F.K., Chen, T.Y. et al. Data-efficient and weakly supervised computational pathology on whole-slide images. Nat Biomed Eng 5, 555–570 (2021). https://doi.org/10.1038/s41551-020-00682-w
-
-```
-@article{lu2021data,
-  title={Data-efficient and weakly supervised computational pathology on whole-slide images},
-  author={Lu, Ming Y and Williamson, Drew FK and Chen, Tiffany Y and Chen, Richard J and Barbieri, Matteo and Mahmood, Faisal},
-  journal={Nature Biomedical Engineering},
-  volume={5},
-  number={6},
-  pages={555--570},
-  year={2021},
-  publisher={Nature Publishing Group}
-}
-```
