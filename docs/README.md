@@ -21,9 +21,9 @@
          (ex. slide_1.ndpi & slide_1.geojson)
 
 
-### WSI Segmentation and Patching 
+### WSI Segmentation and Make Patch 
 
-<img src="Segmentation1.png" width="500px" align="center" />
+<img src="Segmentation1.png" width="200px" align="center" />
 The first step focuses on segmenting the tissue.  
 The segmentation of the annotated area on the slides. 
 Place the digitized whole slide image data (formated .ndpi, .svs etc.) under a folder named DATA_DIRECTORY
@@ -36,94 +36,43 @@ DATA_DIRECTORY/
 	└── slide_X.ndpi
 ```
 
-### Fully Automated Run
+#### Fully Automated Run
 ``` shell
 python create_patches_fp.py --source DATA_DIRECTORY --save_dir RESULTS_DIRECTORY --patch_size 256 --step_size 256 --seg --patch --stitch  --ann_path  ANN_DIR
-![image](https://user-images.githubusercontent.com/88479698/211474954-d6356ceb-3423-4fac-bb8a-7f6a6af8d937.png)
 
 ```
 
-The above command will segment every slide in DATA_DIRECTORY using default parameters, extract all patches within the segemnted tissue regions, create a stitched reconstruction for each slide using its extracted patches (optional) and generate the following folder structure at the specified RESULTS_DIRECTORY:
+The above command segment the slide in DATA_DIRECTORY using annotated ROIs.
+The result (masks, patches,stitches and process_list_autogen.csv) is created at the following folder structure under RESULTS_DIRECTORY
 
 ```bash
 RESULTS_DIRECTORY/
 	├── masks
     		├── slide_1.png
     		├── slide_2.png
-    		└── ...
+		:	:
+    		└── slide_x.png
 	├── patches
     		├── slide_1.h5
     		├── slide_2.h5
-    		└── ...
+    		:	:
+		└── slide_x.h5
 	├── stitches
     		├── slide_1.png
     		├── slide_2.png
-    		└── ...
+		:	:
+    		└── slide_x.png
 	└── process_list_autogen.csv
 ```
 
-The **masks** folder contains the segmentation results (one image per slide).
-The **patches** folder contains arrays of extracted tissue patches from each slide (one .h5 file per slide, where each entry corresponds to the coordinates of the top-left corner of a patch)
-The **stitches** folder contains downsampled visualizations of stitched tissue patches (one image per slide) (Optional, not used for downstream tasks)
-The auto-generated csv file **process_list_autogen.csv** contains a list of all slides processed, along with their segmentation/patching parameters used.
+Check the **stitches** folder.   
+It contains downsampled visualizations of stitched tissue patches (one image per slide)
 
-Additional flags that can be passed include:
-* `--custom_downsample`: factor for custom downscale (not recommended, ideally should first check if native downsamples exist)
-* `--patch_level`: which downsample pyramid level to extract patches from (default is 0, the highest available resolution)
-* `--no_auto_skip`: by default, the script will skip over files for which patched .h5 files already exist in the desination folder, this toggle can be used to override this behavior
-
-Some parameter templates are also availble and can be readily deployed as good choices for default parameters:
-* `bwh_biopsy.csv`: used for segmenting biopsy slides scanned at BWH (Scanned using Hamamatsu S210 and Aperio GT450) 
-* `bwh_resection.csv`: used for segmenting resection slides scanned at BWH
-* `tcga.csv`: used for segmenting TCGA slides
-
-Simply pass the name of the template file to the --preset argument, for example, to use the biopsy template:
-``` shell
-python create_patches_fp.py --source DATA_DIRECTORY --save_dir RESULTS_DIRECTORY --patch_size 256 --preset bwh_biopsy.csv --seg --patch --stitch
-```
-### Custom Default Segmentation Parameters
-For advanced usage, in addition to using the default, single set of parameters defined in the script **create_patches_fp.py**, the user can define custom templates of parameters depending on the dataset. These templates are expected to be stored under **presets**, and contain values for each of the parameters used during segmentation and patching. 
-
-The list of segmentation parameters is as follows:
-* `seg_level`: downsample level on which to segment the WSI (default: -1, which uses the downsample in the WSI closest to 64x downsample)
-* `sthresh`: segmentation threshold (positive integer, default: 8, using a higher threshold leads to less foreground and more background detection)
-* `mthresh`: median filter size (positive, odd integer, default: 7)
-* `use_otsu`: use otsu's method instead of simple binary thresholding (default: False) 
-* `close`: additional morphological closing to apply following initial thresholding (positive integer or -1, default: 4)
-
-The list of contour filtering parameters is as follows:
-* `a_t`: area filter threshold for tissue (positive integer, the minimum size of detected foreground contours to consider, relative to a reference patch size of 512 x 512 at level 0, e.g. a value 10 means only detected foreground contours of size greater than 10 512 x 512 sized patches at level 0 will be processed, default: 100)
-* `a_h`: area filter threshold for holes (positive integer, the minimum size of detected holes/cavities in foreground contours to avoid, once again relative to 512 x 512 sized patches at level 0, default: 16)
-* `max_n_holes`: maximum of holes to consider per detected foreground contours (positive integer, default: 10, higher maximum leads to more accurate patching but increases computational cost)
-
-The list of segmentation visualization parameters is as follows:
-* `vis_level`: downsample level to visualize the segmentation results (default: -1, which uses the downsample in the WSI closest to 64x downsample)
-* `line_thickness`: line thickness to draw visualize the segmentation results (positive integer, in terms of number of pixels occupied by drawn line at level 0, default: 250)
-
-The list of patching parameters is as follows:
-* `use_padding`: whether to pad the border of the slide (default: True)
-* `contour_fn`: contour checking function to decide whether a patch should be considered foreground or background (choices between 'four_pt' - checks if all four points in a small, grid around the center of the patch are inside the contour, 'center' - checks if the center of the patch is inside the contour, 'basic' - checks if the top-left corner of the patch is inside the contour, default: 'four_pt')
+In our model, we do not use information of MASK.  
+Mask is created based on the CLAM preset.
+We use annotation information instead of MASK information.
 
 
-### Two-Step Run (Mannually Adjust Parameters For Specific Slides)
-To ensure that high quality segmentation and extraction of relevant tissue patches, user has the option of first performing segmentation (typically around 1s per slide), inspecting the segmentation results and tweaking the parameters for select slides if necessary and then extracting patches using the tweaked parameters. i.e., first run:
-
-``` shell
-python create_patches_fp.py --source DATA_DIRECTORY --save_dir RESULTS_DIRECTORY --patch_size 256 --seg  
-```
-The above command will segment every slide in DATA_DIRECTORY using default parameters and generate the csv file, but will NOT patch just yet (**patches** and **stitches** folders will be empty)
-
-The csv file can be tweaked for specific slides, and be passed to the script via the --process_list CSV_FILE_NAME such that the script will use the user-updated specifications. Before tweaking the segmentation parameters, the user should make a copy of the csv file and give it a new name (e.g. process_list_edited.csv) because otherwise this file with the default name is overwritten the next time the command is run. Then the user has the option to tweak the parameters for specific slides by changing their corresponding fields in the csv file. The **process** column stores a binary variable (0 or 1) for whether the script should process a specific slide. This allows the user to toggle on just the select few slides to quickly confirm whether the tweaked parameters produce satisfactory results. For example, to re-segment just slide_1.svs again using user-updated parameters, make the appropriate changes to its fields, update its **process** cell to 1, save the csv file, and pass its name to the same command as above:
-
-``` shell
-python create_patches_fp.py --source DATA_DIRECTORY --save_dir RESULTS_DIRECTORY --patch_size 256 --seg --process_list process_list_edited.csv
-```
-
-When satisfied with the segmentation results, the user should make the **process** cell for all slides that need to be processed to 1, save the csv file, and run patching with the saved csv file (just like in the fully-automated run use case, with the additional csv file argument):
-
-``` shell
-python create_patches_fp.py --source DATA_DIRECTORY --save_dir RESULTS_DIRECTORY --patch_size 256 --seg --process_list CSV_FILE_NAME --patch --stitch
-```
 ## Weakly-Supervised Learning using Slide-Level Labels with CLAM
 
 <img src="CLAM2.jpg" width="1000px" align="center" />
