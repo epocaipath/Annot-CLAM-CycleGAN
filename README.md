@@ -30,6 +30,7 @@ The installation guide are written in the GITHUB of [mahmoodlab](https://github.
 ### WSI Segmentation and Make Patch 
 
 <img src="Segmentation1.png" width="200px" align="center" />
+
 The first step focuses on segmenting the tissue.  
 The segmentation of the annotated area on the slides.  
 Place the digitized whole slide image data (formated .ndpi, .svs etc.) under a folder named DATA_DIRECTORY
