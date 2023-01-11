@@ -1,4 +1,4 @@
-name: anogan
+name: gan
 channels:
   - pytorch
   - defaults
@@ -307,4 +307,3 @@ dependencies:
     - umap-learn==0.5.3
     - wandb==0.12.17
     - wrapt==1.14.1
-prefix: /home/user/anaconda3/envs/anogan
