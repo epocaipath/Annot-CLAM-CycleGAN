@@ -179,8 +179,25 @@ Lu, M.Y., Williamson, D.F.K., Chen, T.Y. et al. Data-efficient and weakly superv
 Prepare the environment for GAN    
 We tested the GAN under the environment of GAN.yaml(at docs folder)
 
-### Prepare    
-1. Save the patch-images you want to use at the folder (train/A or train/B)
-2. Check the parameter of Cycle_GAN.py    
-   a) line 30,31   Check correct data path name 
-   b) 
+### Prepare     
+1. Save the patch-images you want to use at the folder (train/A or train/B)    
+2. Check the parameter of Cycle_GAN.py       
+   a) line 30,31       Check correct data path name     
+   b) lines 196-209    Set the parametor for training     
+   c) lines 404-416    Set the parametor for test     
+   d) line  462        Set the number of images to create      
+
+
+#### Run the command below
+``` shell
+python Cycle_GAN.py   
+```
+
+If you want to create images from the image which you donot use for training, try to use cyclegan_test.py after setting the parametors.
+
+
+## License
+This code is made available under the GPLv3 License and is available for non-commercial academic purposes.
+
+## Reference
+This Github is modified from the codes at https://github.com/ayukat1016/gan_sample
