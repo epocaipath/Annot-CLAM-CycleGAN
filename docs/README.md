@@ -178,3 +178,9 @@ Lu, M.Y., Williamson, D.F.K., Chen, T.Y. et al. Data-efficient and weakly superv
 
 Prepare the environment for GAN    
 We tested the GAN under the environment of GAN.yaml(at docs folder)
+
+### Prepare    
+1. Save the patch-images you want to use at the folder (train/A or train/B)
+2. Check the parameter of Cycle_GAN.py    
+   a) line 30,31   Check correct data path name 
+   b) 
