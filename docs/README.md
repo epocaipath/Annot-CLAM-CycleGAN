@@ -11,7 +11,7 @@
 
 ## CLAM with Annotation 
 
-Prepare the environment for clam 
+Prepare the environment for CLAM    
 The installation guide are written in the GITHUB of [mahmoodlab](https://github.com/mahmoodlab/CLAM/blob/master/docs/INSTALLATION.md/)
 
 ### Prepare
