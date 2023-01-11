@@ -4,13 +4,15 @@
 
 *CycleGAN architecture https://github.com/ayukat1016/gan_sample/tree/main/chapter5*
 
-## CLAM with Annotation 
 
 ### Pre-requisites:
 * Linux (Tested on Ubuntu 20.04)
 * NVIDIA GPU (Tested on Nvidia A100)
-* Python (3.7.5), h5py (2.10.0), matplotlib (3.1.1), numpy (1.17.3), opencv-python (4.1.1.26), openslide-python (1.1.1), openslide (3.4.1), pandas (0.25.3), pillow (6.2.1), PyTorch (1.3.1), scikit-learn (0.22.1), scipy (1.3.1), tensorflow (1.14.0), tensorboardx (1.9), torchvision (0.4.2), smooth-topk.
 
+## CLAM with Annotation 
+
+Prepare the environment for clam 
+The installation guide are written in the [GITHUB of mahmood lab] (https://github.com/mahmoodlab/CLAM/blob/master/docs/INSTALLATION.md)
 
 ### Prepare
 1. Make annotation using QuPath [QuPath](https://qupath.github.io/)  
@@ -128,6 +130,8 @@ python create_splits_seq.py --task task_1_tumor_vs_normal --seed 1 --label_frac 
 ```
 
 ### Training
+
+<img src="Training.png" width="400px" align="center" />
 For trining using training data      
 #### Run the command below
 ``` shell
@@ -165,5 +169,5 @@ This code is made available under the GPLv3 License and is available for non-com
 
 ## Reference
 This Github is forked from  * https://github.com/mahmoodlab/CLAM*
-We referenced below
+We referenced below     
 Lu, M.Y., Williamson, D.F.K., Chen, T.Y. et al. Data-efficient and weakly supervised computational pathology on whole-slide images. Nat Biomed Eng 5, 555–570 (2021). https://doi.org/10.1038/s41551-020-00682-w
