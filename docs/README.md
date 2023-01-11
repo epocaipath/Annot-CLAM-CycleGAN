@@ -171,3 +171,10 @@ This code is made available under the GPLv3 License and is available for non-com
 This Github is forked from  * https://github.com/mahmoodlab/CLAM*
 We referenced below     
 Lu, M.Y., Williamson, D.F.K., Chen, T.Y. et al. Data-efficient and weakly supervised computational pathology on whole-slide images. Nat Biomed Eng 5, 555–570 (2021). https://doi.org/10.1038/s41551-020-00682-w
+
+
+
+## CycleGAN for patches
+
+Prepare the environment for GAN    
+We tested the GAN under the environment of GAN.yaml(at docs folder)
