@@ -12,7 +12,7 @@
 ## CLAM with Annotation 
 
 Prepare the environment for clam 
-The installation guide are written in the [GITHUB of mahmood lab] (https://github.com/mahmoodlab/CLAM/blob/master/docs/INSTALLATION.md)
+The installation guide are written in the GITHUB of [mahmoodlab] (https://github.com/mahmoodlab/CLAM/blob/master/docs/INSTALLATION.md)
 
 ### Prepare
 1. Make annotation using QuPath [QuPath](https://qupath.github.io/)  
