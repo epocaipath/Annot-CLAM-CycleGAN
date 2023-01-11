@@ -1,4 +1,4 @@
-# CLAM_and_CycleGAN
+# CLAM and CycleGAN
 Data-efficient and weakly supervised computational pathology on whole slide images &amp; Cycle GAN analysis 
 
 
@@ -13,7 +13,7 @@ Data-efficient and weakly supervised computational pathology on whole slide imag
 * Linux (Tested on Ubuntu 20.04)
 * NVIDIA GPU (Tested on Nvidia A100)
 
-## CLAM with Annotation 
+## 1. CLAM with Annotation 
 
 Prepare the environment for CLAM    
 The installation guide are written in the GITHUB of [mahmoodlab](https://github.com/mahmoodlab/CLAM/blob/master/docs/INSTALLATION.md/)
@@ -168,7 +168,7 @@ The result is created under heatmaps directory
 The heat map using annotated area is created under heatmap_row result
 
 
-## #License
+### License
 This code is made available under the GPLv3 License and is available for non-commercial academic purposes.
 
 ### Reference
@@ -178,7 +178,7 @@ Lu, M.Y., Williamson, D.F.K., Chen, T.Y. et al. Data-efficient and weakly superv
 
 
 
-## CycleGAN for patches
+## 2.CycleGAN for patches
 
 Prepare the environment for GAN    
 We tested the GAN under the environment of GAN.yaml(at docs folder)
